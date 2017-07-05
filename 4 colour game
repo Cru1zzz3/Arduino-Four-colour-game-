@@ -1,0 +1,146 @@
+//sensors                                              
+
+
+const int buttonRed = 4;
+const int buttonYellow = 7;
+const int buttonGreen = 8;
+const int buttonBlue = 5;
+//leds 
+const int ledRed =  3;
+const int ledYellow = 2;
+const int ledGreen = 12;
+const int ledBlue = 10;  
+//buzzer
+const byte buzz = 11;
+
+// variables will change:
+int sensorOneState = 0;
+int sensorTwoState = 0;// variable for reading the pushbutton status
+int sensorThreeState = 0;
+int sensorFourState = 0; 
+
+int buttonRedState = 0;
+int buttonYellowState = 0;
+int buttonGreenState = 0;
+int buttonBlueState = 0;
+
+int lastState = 0;
+int currentState = 0;
+
+
+void setup() {
+  // initialize the LED pin as an output:
+  pinMode(ledRed, OUTPUT);
+  pinMode(ledYellow, OUTPUT);
+  pinMode(ledGreen,OUTPUT);
+  pinMode(ledBlue, OUTPUT);
+  // initialize buttons
+  pinMode(buttonRed,INPUT);
+  pinMode(buttonYellow,INPUT);
+  pinMode(buttonGreen,INPUT);
+ 
+ // buzzer 
+  pinMode(buzz,OUTPUT);
+ }
+
+
+void sound(int buzz){
+  tone(buzz,2000);
+  delay(1000);
+  noTone(buzz);
+}
+
+int checkState(int sensorState,int led){
+ if(sensorState == HIGH){
+  digitalWrite(led,HIGH);
+ }
+}
+ 
+void loop() {
+
+buttonRedState = digitalRead(buttonRed);
+buttonYellowState = digitalRead(buttonYellow);
+buttonGreenState = digitalRead(buttonGreen);
+buttonBlueState = digitalRead(buttonBlue);
+
+if (buttonRedState == HIGH){
+  digitalWrite(ledRed,HIGH);
+  tone(buzz,1000);
+  delay(1000);
+  }
+else {
+  digitalWrite(ledRed,LOW);
+      noTone(buzz);
+   }
+
+
+if (buttonYellowState == HIGH){
+  digitalWrite(ledYellow,HIGH);
+  tone(buzz,2000);
+  delay(1000);
+  }
+else {digitalWrite(ledYellow,LOW);
+      noTone(buzz);
+}
+
+if (buttonGreenState == HIGH){
+  digitalWrite(ledGreen,HIGH);
+  tone(buzz,3000);
+  delay(1000);
+}
+else {digitalWrite(ledGreen,LOW);
+      noTone(buzz);
+     }
+
+
+if (buttonBlueState == HIGH){
+  digitalWrite(ledBlue,HIGH);
+  tone(buzz,4000);
+  delay(1000);
+}
+else {
+  digitalWrite(ledBlue,LOW);
+  noTone(buzz);
+  }
+}
+/*
+  //defining sensorsState
+  sensorOneState = digitalRead(sensorOne);
+  sensorTwoState = digitalRead(sensorTwo);
+  sensorThreeState = digitalRead(sensorThree);
+
+    
+  if (sensorOneState == HIGH)
+  {
+  digitalWrite(ledRed,HIGH);
+  sound(buzz);
+  
+  }
+  else digitalWrite(ledRed,LOW);
+
+  if (sensorTwoState == HIGH)
+  {
+    digitalWrite(ledYellow,HIGH);
+    sound(buzz);  
+  }
+  else digitalWrite(ledYellow,LOW); 
+
+
+if (sensorTwoState == HIGH)
+  {
+    digitalWrite(ledYellow,HIGH);
+    sound(buzz);  
+  }
+  else digitalWrite(ledYellow,LOW); 
+ 
+
+if (sensorThreeState == HIGH)
+{ 
+  digitalWrite(ledGreen,HIGH);
+  sound(buzz);
+}
+else digitalWrite(ledGreen,LOW);
+}
+
+
+*/
