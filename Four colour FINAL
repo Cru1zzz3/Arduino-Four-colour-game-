@@ -1,0 +1,293 @@
+//buttons                                            
+const int buttonRed = 2;
+const int buttonYellow = 3;
+const int buttonGreen = 4;
+const int buttonBlue = 5;
+
+//leds 
+const int ledRed =  8;
+const int ledYellow = 9;
+const int ledGreen = 10;
+const int ledBlue = 11; 
+const int ledAlarm = 7; 
+
+//buzzer
+const byte buzz = 12;
+
+// variables will change:
+int buttonRedState = 0;
+int buttonYellowState = 0;
+int buttonGreenState = 0;
+int buttonBlueState = 0;
+boolean waitingFlag;
+
+// variables for game 
+int *gameArray;
+int pressedButton;
+int currentPressButton;
+int currentLed;
+
+void setup() {
+  // initialize serial port for debugging
+  Serial.begin(9600);
+  
+  // generate randomSeed for random values for LEDs
+  randomSeed(analogRead(A0));  
+  
+  // initialize the LED pin as an output:
+  pinMode(ledRed, OUTPUT);
+  pinMode(ledYellow, OUTPUT);
+  pinMode(ledGreen,OUTPUT);
+  pinMode(ledBlue, OUTPUT);
+  pinMode(ledAlarm,OUTPUT);
+  
+  // initialize buttons
+  pinMode(buttonRed,INPUT);
+  pinMode(buttonYellow,INPUT);
+  pinMode(buttonGreen,INPUT);
+  pinMode(buttonBlue,INPUT);
+  
+ // initialize buzzer 
+  pinMode(buzz,OUTPUT);
+ }
+
+void waitingOne (){
+  digitalWrite(ledRed,HIGH);
+  delay(500);
+  digitalWrite(ledYellow,HIGH);
+  delay(500);
+  digitalWrite(ledGreen,HIGH);
+  delay(500);
+  digitalWrite(ledBlue,HIGH);
+  delay(500); 
+}
+void waitingTwo(){
+  digitalWrite(ledRed,LOW);
+  delay(500);
+  digitalWrite(ledYellow,LOW);
+  delay(500);
+  digitalWrite(ledGreen,LOW);
+  delay(500);
+  digitalWrite(ledBlue,LOW);
+  delay(500);
+}
+
+
+boolean checkWaiting(){
+      if (buttonRedState == LOW && buttonYellowState == LOW && buttonGreenState == LOW && buttonBlueState == LOW){
+      return true;
+      }  
+      else {
+        return false;
+           }
+}
+
+void blackout(){
+   digitalWrite(ledRed,LOW);
+   digitalWrite(ledYellow,LOW);
+   digitalWrite(ledGreen,LOW);
+   digitalWrite(ledBlue,LOW);
+}
+
+void soundStart(){
+  tone(buzz,2000);
+  delay(500);
+  noTone(buzz);
+  }
+
+void soundRed(){
+  tone(buzz,200);
+  delay (500);
+  noTone(buzz);  
+}
+
+void soundYellow(){
+  tone(buzz,300);
+  delay (500);
+  noTone(buzz);
+}
+
+void soundGreen(){
+  tone(buzz,400);
+  delay(500);
+  noTone(buzz);
+}
+
+void soundBlue(){
+  tone(buzz,500);
+  delay(500);
+  noTone(buzz); 
+}
+
+void soundLose(){
+  int i;
+  for (i=0;i<4;i++){
+  tone (buzz, 5000);
+  digitalWrite(ledAlarm,HIGH);
+  delay (500);
+  digitalWrite(ledAlarm,LOW);
+  noTone(buzz);
+  delay(500);
+  }
+}
+
+
+void Alarm(){
+  digitalWrite(ledAlarm,HIGH);
+  checkButtonState();
+  delay(300);
+  pressedButton=waitingPressButton();
+  digitalWrite(ledAlarm,LOW);  
+}
+
+
+void(*resetFunc)(void) = 0;
+
+void checkButtonState(){
+buttonRedState = digitalRead(buttonRed);
+buttonYellowState = digitalRead(buttonYellow);
+buttonGreenState = digitalRead(buttonGreen);
+buttonBlueState = digitalRead(buttonBlue);
+}
+
+
+void loop() {
+checkButtonState();
+waitingFlag = checkWaiting();
+if (waitingFlag == true){
+waitingOne();
+}
+else startGame();
+
+checkButtonState();
+waitingFlag = checkWaiting();
+if (waitingFlag == true){
+waitingTwo();
+}
+else  startGame();
+
+}
+
+void startGame(){ 
+    int i;
+    for (i=0;i<3;i++){
+    digitalWrite(ledRed,HIGH);
+    digitalWrite(ledYellow,HIGH);
+    digitalWrite(ledGreen,HIGH);
+    digitalWrite(ledBlue,HIGH);
+    soundStart();
+                                 
+    digitalWrite(ledRed,LOW);
+    digitalWrite(ledYellow,LOW);
+    digitalWrite(ledGreen,LOW);
+    digitalWrite(ledBlue,LOW);
+    noTone(buzz);
+    delay(500);
+    }
+  mainGame();
+}
+
+void mainGame(){
+int i,j,k,n;
+int stepCount=0;
+
+for (i=0;i<stepCount+1;i++){
+ blackout();
+ delay(200);
+ gameArray=(int*)realloc(gameArray,(stepCount+1)*sizeof(gameArray));
+ stepCount++;
+ 
+ currentLed = random(8,12);
+ gameArray[i] = currentLed;
+
+ for (j=0;j<stepCount;j++){
+ digitalWrite(gameArray[j],HIGH);
+  switch (gameArray[j]){
+  case 8: 
+  soundRed();
+  break;
+  case 9: 
+  soundYellow();
+  break;
+  case 10:
+  soundGreen();
+  break;
+  case 11:
+  soundBlue(); 
+  break; 
+  }
+  delay(500);
+  digitalWrite(gameArray[j],LOW);
+ }
+ blackout();
+ n=0;
+ for (k=0;k<stepCount;k++){
+ delay(1000);
+
+ Alarm();
+ if (pressedButton == gameArray[k])
+ {
+  n++;
+ }
+ else break;
+}
+ 
+ if (n == stepCount)
+ { 
+  continue;
+  }
+  else{
+lose(stepCount);
+  }
+ break;
+}
+resetFunc();
+}
+
+int waitingPressButton(){
+  if (buttonRedState == LOW && buttonYellowState == LOW && buttonGreenState == LOW && buttonBlueState == LOW){
+    digitalWrite(ledRed,LOW);
+    digitalWrite(ledYellow,LOW);
+    digitalWrite(ledGreen,LOW);
+    digitalWrite(ledBlue,LOW); 
+  }
+  checkButtonState();
+  currentPressButton = pressingButtonFunction();
+  return currentPressButton;
+  }
+
+ int  pressingButtonFunction(){
+   checkButtonState();
+   if (buttonRedState == HIGH)
+  { digitalWrite(ledRed,HIGH);
+    soundRed();
+    digitalWrite(ledRed,LOW);
+    return 8;
+   }
+  if (buttonYellowState == HIGH)
+  { digitalWrite(ledYellow,HIGH);
+    soundYellow();
+    digitalWrite(ledYellow,LOW);
+    return 9;
+  }
+  if (buttonGreenState == HIGH)
+  { digitalWrite(ledGreen,HIGH);
+    soundGreen();
+    digitalWrite(ledGreen,LOW);
+    return 10;
+    }
+  if (buttonBlueState == HIGH)
+  { digitalWrite(ledBlue,HIGH);
+    soundBlue();
+    digitalWrite(ledBlue,LOW);
+    return 11;}
+}
+
+void lose(int stepCount){
+  int i;
+  free(gameArray);
+  for (i=0;i<stepCount;i++){
+  gameArray[i]=0;
+  }
+  soundLose();
+}
