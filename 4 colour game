@@ -276,16 +276,10 @@ for (i=0;i<stepCount+1;i++){
  blackout();
  
  n=0;
- Serial.print("stepCount  ");
- Serial.println(stepCount);
+ 
  for (k=0;k<stepCount;k++){
  delay(1000);
- 
  Alarm();
- 
- Serial.print("PressedButton ");
- Serial.println(pressedButton);
- 
  if (pressedButton == gameArray[k])
  {
   n++;
