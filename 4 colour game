@@ -165,8 +165,7 @@ void soundLose(){
 
 
 
-void monitoringButtons(){
-  
+void monitoringButtons(){ 
 Serial.println("/////////////////////////");
 Serial.print("buttonRedState ");
 Serial.println(buttonRedState);
@@ -361,57 +360,3 @@ void lose(int stepCount){
  
   soundLose();
 }
-
-
-
-
-
-
-
-
-
-
-
-/* LAST CURRENT STATE
-currentFlagState =  checkWaiting();
-if (currentFlagState == true){
-waitingOne();
-}
-
-lastFlagState = currentFlagState;
-
-currentFlagState  =  checkWaiting();                         
-if (currentFlagState == false  ){
-waitingTwo();
-}*/
-
-
-/*
-if (buttonRedState == HIGH){
-  digitalWrite(ledRed,HIGH);
-  tone(buzz,1000);
-  delay(1000);
-  }
-else { 
-  digitalWrite(ledRed,LOW);
-      noTone(buzz);
-   }
-
-
-if (buttonYellowState == HIGH){
-  digitalWrite(ledYellow,HIGH);
-  tone(buzz,2000);
-  delay(1000);
-  }
-else {digitalWrite(ledYellow,LOW);
-      noTone(buzz);
-}
-
-if (buttonGreenState == HIGH){
-  digitalWrite(ledGreen,HIGH);
-  tone(buzz,3000);
-  delay(1000);
-} 
-  }
-}
-*/
