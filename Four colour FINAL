@@ -245,12 +245,6 @@ resetFunc();
 }
 
 int waitingPressButton(){
-  if (buttonRedState == LOW && buttonYellowState == LOW && buttonGreenState == LOW && buttonBlueState == LOW){
-    digitalWrite(ledRed,LOW);
-    digitalWrite(ledYellow,LOW);
-    digitalWrite(ledGreen,LOW);
-    digitalWrite(ledBlue,LOW); 
-  }
   checkButtonState();
   currentPressButton = pressingButtonFunction();
   return currentPressButton;
